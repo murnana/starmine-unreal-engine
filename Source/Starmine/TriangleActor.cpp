@@ -14,10 +14,10 @@ ATriangleActor::ATriangleActor()
 	RootComponent = MeshComponent;
 }
 
-void ATriangleActor::BeginPlay()
+void ATriangleActor::OnConstruction(const FTransform& Transform)
 {
-	// 親クラスの BeginPlay を必ず最初に呼ぶ（UE の規約）
-	Super::BeginPlay();
+	// 親クラスの OnConstruction を必ず最初に呼ぶ（UE の規約）
+	Super::OnConstruction(Transform);
 
 	// FDynamicMesh3：頂点リストと三角形リストを持つシンプルなジオメトリデータ構造
 	UE::Geometry::FDynamicMesh3 Mesh;
@@ -28,9 +28,30 @@ void ATriangleActor::BeginPlay()
 	int32 index2 = Mesh.AppendVertex(FVector3d(-50.0, 0.0, 0.0));
 	int32 index3 = Mesh.AppendVertex(FVector3d(0.0, 100.0, 0.0));
 
-	// 3つの頂点インデックスで三角形を1枚定義する
-	Mesh.AppendTriangle(index1, index2, index3);
+	// 3つの頂点インデックスで三角形を1枚定義する（戻り値は三角形のID）
+	int32 TriangleId = Mesh.AppendTriangle(index2, index1, index3);
+
+	// 頂点カラーを有効化する（色はオーバーレイとして三角形の角ごとに持つ）
+	Mesh.EnableAttributes();
+	Mesh.Attributes()->EnablePrimaryColors();
+	UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = Mesh.Attributes()->PrimaryColors();
+
+	int32 c0 = ColorOverlay->AppendElement(FVector4f(1.0f, 0.0f, 0.0f, 1.0f));
+	int32 c1 = ColorOverlay->AppendElement(FVector4f(0.0f, 1.0f, 0.0f, 1.0f));
+	int32 c2 = ColorOverlay->AppendElement(FVector4f(0.0f, 0.0f, 1.0f, 1.0f));
+
+	// 三角形の3つの角にそれぞれの色要素を割り当てる
+	ColorOverlay->SetTriangle(TriangleId, UE::Geometry::FIndex3i(c0, c1, c2));
 
 	// MoveTemp：所有権を移してコピーを避ける（Mesh はここで空になる）
 	MeshComponent->SetMesh(MoveTemp(Mesh));
+
+	// マテリアルなしで頂点カラーをそのまま描画するモードに設定する
+	MeshComponent->SetColorOverrideMode(EDynamicMeshComponentColorOverrideMode::VertexColors);
+}
+
+void ATriangleActor::BeginPlay()
+{
+	// 親クラスの BeginPlay を必ず最初に呼ぶ（UE の規約）
+	Super::BeginPlay();
 }

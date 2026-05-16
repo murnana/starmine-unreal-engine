@@ -22,6 +22,9 @@ public:
 	ATriangleActor();
 
 protected:
+	// OnConstruction：エディタ上でアクターを配置・移動するたびに呼ばれる。エディタでも確認できる
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	// BeginPlay：アクターがゲームワールドに配置されて最初のフレームが始まるときに呼ばれる
 	virtual void BeginPlay() override;
 
