@@ -9,6 +9,7 @@
 
 // 前方宣言：型が存在することだけ伝え、ヘッダのインクルードを減らしてコンパイルを高速化する
 class UBoxComponent;
+class UCameraComponent;
 class UDynamicMeshComponent;
 class UFloatingPawnMovement;
 class UInputMappingContext;
@@ -37,6 +38,10 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 private:
+	// 真上から見下ろす平行投影カメラ。Z 軸上方に固定配置し、Pitch=-90 で XY 平面を映す
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCameraComponent> Camera;
+
 	// 当たり判定の矩形コリジョン。Root として位置・回転の基準になる
 	// UPROPERTY(VisibleAnywhere) : エディタの Details パネルで確認できる（編集はできない）
 	// TObjectPtr<T> : UE5 推奨の UPROPERTY 用ポインタ型。GC がこのポインタを追跡する

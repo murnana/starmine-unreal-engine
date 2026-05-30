@@ -1,4 +1,6 @@
 #include "PlayerShipPawn.h"
+// UCameraComponent の定義。プレイヤー視点のカメラを表すコンポーネント
+#include "Camera/CameraComponent.h"
 // UBoxComponent の定義。矩形の当たり判定コンポーネント
 #include "Components/BoxComponent.h"
 // UDynamicMeshComponent の定義。実行時に頂点・三角形を動的に変更できるメッシュコンポーネント
@@ -33,6 +35,16 @@ APlayerShipPawn::APlayerShipPawn()
 	ShipMesh = CreateDefaultSubobject<UDynamicMeshComponent>(TEXT("ShipMesh"));
 	ShipMesh->SetupAttachment(CollisionBox);
 
+	// 真上から見下ろすカメラを追加する
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(CollisionBox);
+	// Z=1000cm（10m）上空に配置し、真下（Pitch=-90）を向かせる
+	Camera->SetRelativeLocationAndRotation(FVector(0.0, 0.0, 1000.0), FRotator(-90.0, 0.0, 0.0));
+	// 平行投影モード：遠近感をなくし 2D ゲームらしく見せる
+	Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
+	// 画面の横幅を 1024cm に設定する（表示範囲の広さ）
+	Camera->OrthoWidth = 1024.0f;
+
 	// 重力なしで XY 平面上を自由に移動できるコンポーネントを追加する
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
 	// 最大移動速度を 600 cm/s に設定する
@@ -57,8 +69,8 @@ void APlayerShipPawn::OnConstruction(const FTransform& Transform)
 	// 単位は cm。XY 平面（Z=0）上に船体の三角形を定義する。+Y 方向が機首（前方）
 	// 頂点順序（反時計回り）で法線が +Z（カメラ側）になる
 	auto index1 = Mesh.AppendVertex(FVector3d(-50.0, -50.0, 0.0));
-	auto index2 = Mesh.AppendVertex(FVector3d(50.0, -50.0, 0.0));
-	auto index3 = Mesh.AppendVertex(FVector3d(0.0, 50.0, 0.0));
+	auto index2 = Mesh.AppendVertex(FVector3d(-50.0, 50.0, 0.0));
+	auto index3 = Mesh.AppendVertex(FVector3d(50.0, 0.0, 0.0));
 	// 3つの頂点インデックスで三角形を1枚定義する（戻り値は三角形の ID）
 	auto triangleId = Mesh.AppendTriangle(index1, index2, index3);
 
