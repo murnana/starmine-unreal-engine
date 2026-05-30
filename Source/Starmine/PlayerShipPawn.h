@@ -8,6 +8,7 @@
 #include "PlayerShipPawn.generated.h"
 
 // 前方宣言：型が存在することだけ伝え、ヘッダのインクルードを減らしてコンパイルを高速化する
+class ABulletActor;
 class UBoxComponent;
 class UCameraComponent;
 class UDynamicMeshComponent;
@@ -68,6 +69,10 @@ private:
 	// 発射入力（スペースキーなど）に対応する InputAction アセット
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> FireAction;
+
+	// スポーンする弾丸クラス。Blueprint サブクラスを Editor から設定する
+	UPROPERTY(EditAnywhere, Category="Bullet")
+	TSubclassOf<ABulletActor> BulletClass;
 
 	// MoveAction が入力されたときに呼ばれる。入力値をもとに XY 平面を移動する
 	void OnMove(const FInputActionValue& Value);

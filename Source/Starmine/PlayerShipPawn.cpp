@@ -1,4 +1,5 @@
 #include "PlayerShipPawn.h"
+#include "BulletActor.h"
 // UCameraComponent の定義。プレイヤー視点のカメラを表すコンポーネント
 #include "Camera/CameraComponent.h"
 // UBoxComponent の定義。矩形の当たり判定コンポーネント
@@ -145,5 +146,18 @@ void APlayerShipPawn::OnMove(const FInputActionValue& Value)
 
 void APlayerShipPawn::OnFire(const FInputActionValue& Value)
 {
-	// 弾丸生成は後のタスクで実装する
+	if (!BulletClass)
+	{
+		return;
+	}
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	// 自機の前方 60cm にスポーンする（自機メッシュと重ならないようにオフセット）
+	const FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 60.0f;
+	World->SpawnActor<ABulletActor>(BulletClass, SpawnLocation, GetActorRotation());
 }
