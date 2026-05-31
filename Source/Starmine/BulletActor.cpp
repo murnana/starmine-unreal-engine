@@ -28,8 +28,9 @@ ABulletActor::ABulletActor()
 void ABulletActor::BeginPlay()
 {
 	Super::BeginPlay();
-	// OnActorBeginOverlap：自分のいずれかのコンポーネントが別アクターと重なった瞬間に発火する
-	OnActorBeginOverlap.AddDynamic(this, &ABulletActor::OnHitKillVolume);
+	// OnActorEndOverlap：自分が別アクターから分離した瞬間に発火する
+	// ボリューム外に出たら Destroy するため、EndOverlap を使う
+	OnActorEndOverlap.AddDynamic(this, &ABulletActor::OnHitKillVolume);
 }
 
 void ABulletActor::OnHitKillVolume(AActor* OverlappedActor, AActor* OtherActor)
