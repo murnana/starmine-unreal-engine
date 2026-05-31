@@ -18,8 +18,15 @@ public:
 	ABulletActor();
 
 protected:
+	virtual void BeginPlay() override;
 	// 弾丸の見た目（頂点メッシュ）を構築する
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+private:
+	// ABulletKillVolume に重なった瞬間に呼ばれるコールバック
+	// UFUNCTION() は AddDynamic で登録するために必須
+	UFUNCTION()
+	void OnHitKillVolume(AActor* OverlappedActor, AActor* OtherActor);
 
 private:
 	// Details パネルで弾の色を指定できる。OnConstruction で参照されメッシュに反映される

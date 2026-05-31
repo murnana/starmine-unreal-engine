@@ -1,4 +1,5 @@
 #include "BulletActor.h"
+#include "BulletKillVolume.h"
 #include "Components/SphereComponent.h"
 #include "Components/DynamicMeshComponent.h"
 #include "DynamicMesh/DynamicMesh3.h"
@@ -22,6 +23,26 @@ ABulletActor::ABulletActor()
 	MovementComponent->MaxSpeed = 1200.0f;
 	// 宇宙空間なので重力なし
 	MovementComponent->ProjectileGravityScale = 0.0f;
+}
+
+void ABulletActor::BeginPlay()
+{
+	Super::BeginPlay();
+	// OnActorBeginOverlap：自分のいずれかのコンポーネントが別アクターと重なった瞬間に発火する
+	OnActorBeginOverlap.AddDynamic(this, &ABulletActor::OnHitKillVolume);
+}
+
+void ABulletActor::OnHitKillVolume(AActor* OverlappedActor, AActor* OtherActor)
+{
+	if (!OtherActor)
+	{
+		return;
+	}
+
+	if (OtherActor->IsA<ABulletKillVolume>())
+	{
+		Destroy();
+	}
 }
 
 void ABulletActor::OnConstruction(const FTransform& Transform)
