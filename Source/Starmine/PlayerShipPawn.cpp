@@ -2,8 +2,8 @@
 #include "BulletActor.h"
 // UCameraComponent の定義。プレイヤー視点のカメラを表すコンポーネント
 #include "Camera/CameraComponent.h"
-// UBoxComponent の定義。矩形の当たり判定コンポーネント
-#include "Components/BoxComponent.h"
+// USphereComponent の定義。球体の当たり判定コンポーネント
+#include "Components/SphereComponent.h"
 // UDynamicMeshComponent の定義。実行時に頂点・三角形を動的に変更できるメッシュコンポーネント
 #include "Components/DynamicMeshComponent.h"
 // FDynamicMesh3 の定義。頂点リストと三角形リストを持つジオメトリデータ構造
@@ -26,19 +26,18 @@ APlayerShipPawn::APlayerShipPawn()
 
 	// CreateDefaultSubobject：コンストラクタ専用の Component 生成関数
 	// 生成した Component は自動的に GC 管理下に置かれる
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	// 半径 (X=20, Y=20, Z=5) cm の薄い矩形コリジョン。縦スクロール用に Z を薄くしている
-	CollisionBox->SetBoxExtent(FVector(20.0, 20.0, 5.0));
+	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
+	CollisionSphere->InitSphereRadius(15.0f);
 	// このアクターの RootComponent（位置・回転・スケールの基準）に設定する
-	RootComponent = CollisionBox;
+	RootComponent = CollisionSphere;
 
-	// 船体メッシュを CollisionBox の子として追加する
+	// 船体メッシュを CollisionSphere の子として追加する
 	ShipMesh = CreateDefaultSubobject<UDynamicMeshComponent>(TEXT("ShipMesh"));
-	ShipMesh->SetupAttachment(CollisionBox);
+	ShipMesh->SetupAttachment(CollisionSphere);
 
 	// 真上から見下ろすカメラを追加する
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(CollisionBox);
+	Camera->SetupAttachment(CollisionSphere);
 	// Z=1000cm（10m）上空に配置し、真下（Pitch=-90）を向かせる
 	Camera->SetRelativeLocationAndRotation(FVector(0.0, 0.0, 1000.0), FRotator(-90.0, 0.0, 0.0));
 	// 平行投影モード：遠近感をなくし 2D ゲームらしく見せる

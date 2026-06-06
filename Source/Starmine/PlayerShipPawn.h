@@ -9,7 +9,7 @@
 
 // 前方宣言：型が存在することだけ伝え、ヘッダのインクルードを減らしてコンパイルを高速化する
 class ABulletActor;
-class UBoxComponent;
+class USphereComponent;
 class UCameraComponent;
 class UDynamicMeshComponent;
 class UFloatingPawnMovement;
@@ -43,11 +43,11 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UCameraComponent> Camera;
 
-	// 当たり判定の矩形コリジョン。Root として位置・回転の基準になる
+	// 当たり判定の球体コリジョン。Root として位置・回転の基準になる
 	// UPROPERTY(VisibleAnywhere) : エディタの Details パネルで確認できる（編集はできない）
 	// TObjectPtr<T> : UE5 推奨の UPROPERTY 用ポインタ型。GC がこのポインタを追跡する
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UBoxComponent> CollisionBox;
+	TObjectPtr<USphereComponent> CollisionSphere;
 
 	// 船体の三角形メッシュを描画するコンポーネント
 	UPROPERTY(VisibleAnywhere)
