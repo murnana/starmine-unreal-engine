@@ -7,11 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8200045-d925-40cf-8f1c-d75843d67ed2" name="変更" comment="">
-      <change afterPath="$PROJECT_DIR$/Content/Starmine/Blueprint/Actors/Bullet/BP_BulletActor.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Starmine/BulletActor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Starmine/BulletActor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Starmine/BulletActor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Starmine/BulletActor.h" afterDir="false" />
-    </list>
+    <list default="true" id="e8200045-d925-40cf-8f1c-d75843d67ed2" name="変更" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
