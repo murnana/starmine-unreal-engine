@@ -1,7 +1,5 @@
 #include "PlayerShipPawn.h"
 #include "BulletActor.h"
-// UCameraComponent の定義。プレイヤー視点のカメラを表すコンポーネント
-#include "Camera/CameraComponent.h"
 // USphereComponent の定義。球体の当たり判定コンポーネント
 #include "Components/SphereComponent.h"
 // UDynamicMeshComponent の定義。実行時に頂点・三角形を動的に変更できるメッシュコンポーネント
@@ -34,16 +32,6 @@ APlayerShipPawn::APlayerShipPawn()
 	// 船体メッシュを CollisionSphere の子として追加する
 	ShipMesh = CreateDefaultSubobject<UDynamicMeshComponent>(TEXT("ShipMesh"));
 	ShipMesh->SetupAttachment(CollisionSphere);
-
-	// 真上から見下ろすカメラを追加する
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(CollisionSphere);
-	// Z=1000cm（10m）上空に配置し、真下（Pitch=-90）を向かせる
-	Camera->SetRelativeLocationAndRotation(FVector(0.0, 0.0, 1000.0), FRotator(-90.0, 0.0, 0.0));
-	// 平行投影モード：遠近感をなくし 2D ゲームらしく見せる
-	Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
-	// 画面の横幅を 1024cm に設定する（表示範囲の広さ）
-	Camera->OrthoWidth = 1024.0f;
 
 	// 重力なしで XY 平面上を自由に移動できるコンポーネントを追加する
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
