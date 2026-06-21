@@ -1,6 +1,7 @@
 #include "CameraRailActor.h"
 // UCameraComponent の定義
 #include "Camera/CameraComponent.h"
+#include "BulletKillVolume.h"
 
 ACameraRailActor::ACameraRailActor()
 {
@@ -13,6 +14,15 @@ ACameraRailActor::ACameraRailActor()
 	// 平行投影モード：遠近感をなくし 2D ゲームらしく見せる
 	Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
 	Camera->OrthoWidth = 1024.0f;
+}
+
+void ACameraRailActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	auto world = GetWorld();
+	this->KillVolume = world->SpawnActor<ABulletKillVolume>();
+	this->KillVolume->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
 void ACameraRailActor::Tick(float DeltaTime)

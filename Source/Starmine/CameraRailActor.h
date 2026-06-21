@@ -5,6 +5,7 @@
 #include "CameraRailActor.generated.h"
 
 class UCameraComponent;
+class ABulletKillVolume;
 
 // UCLASS() : UE のリフレクションシステムにこのクラスを登録するマクロ
 UCLASS()
@@ -17,12 +18,17 @@ public:
 	ACameraRailActor();
 
 protected:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	// 真上から見下ろす平行投影カメラ
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UCameraComponent> Camera;
+
+	// カメラに追従する弾消去ボリューム。BeginPlay でスポーン・アタッチされる
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<ABulletKillVolume> KillVolume;
 
 	// 1秒あたりのスクロール速度（cm/s）。エディタ・Blueprint から調整できる
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera", meta=(AllowPrivateAccess=true))
