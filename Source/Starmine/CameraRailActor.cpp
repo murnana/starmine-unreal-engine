@@ -16,6 +16,11 @@ ACameraRailActor::ACameraRailActor()
 	Camera->OrthoWidth = 1024.0f;
 }
 
+float ACameraRailActor::GetScrollSpeed() const
+{
+	return this->ScrollSpeed;
+}
+
 FBox2D ACameraRailActor::GetViewBounds2D() const
 {
 	// フォールバック用アスペクト比。Viewport が取得できない場合に使う

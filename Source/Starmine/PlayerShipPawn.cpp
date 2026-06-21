@@ -112,8 +112,12 @@ void APlayerShipPawn::Tick(float DeltaTime)
 		return;
 	}
 
+	auto scrollSpeed = CameraRail->GetScrollSpeed();
 	auto viewBounds2D = CameraRail->GetViewBounds2D();
+
 	auto playerLocation = this->GetActorLocation();
+	playerLocation.X += scrollSpeed * DeltaTime;
+
 	auto min = FVector(viewBounds2D.Min, playerLocation.Z);
 	auto max = FVector(viewBounds2D.Max, playerLocation.Z);
 	auto newLocation = playerLocation.BoundToBox(min, max);

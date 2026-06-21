@@ -17,6 +17,9 @@ class STARMINE_API ACameraRailActor : public AActor
 public:
 	ACameraRailActor();
 
+	// スクロールの速度を取得します
+	float GetScrollSpeed() const;
+
 	// カメラが映す XY 平面上の矩形範囲を返す（プレイヤー移動制限に使用）
 	FBox2D GetViewBounds2D() const;
 
