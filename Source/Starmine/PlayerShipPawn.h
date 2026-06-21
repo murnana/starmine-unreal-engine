@@ -9,6 +9,7 @@
 
 // 前方宣言：型が存在することだけ伝え、ヘッダのインクルードを減らしてコンパイルを高速化する
 class ABulletActor;
+class ACameraRailActor;
 class USphereComponent;
 class UDynamicMeshComponent;
 class UFloatingPawnMovement;
@@ -34,6 +35,8 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	// BeginPlay：ゲーム開始時に呼ばれる。Enhanced Input の MappingContext を登録する
 	virtual void BeginPlay() override;
+	// Tick：毎フレーム呼ばれる。プレイヤー位置をカメラ境界内にクランプする
+	virtual void Tick(float DeltaTime) override;
 	// SetupPlayerInputComponent：入力アクションとハンドラ関数を紐付ける
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
@@ -68,6 +71,10 @@ private:
 	// スポーンする弾丸クラス。Blueprint サブクラスを Editor から設定する
 	UPROPERTY(EditAnywhere, Category="Bullet")
 	TSubclassOf<ABulletActor> BulletClass;
+
+	// 移動制限に使うカメラアクター。BeginPlay で自動取得する
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<ACameraRailActor> CameraRail;
 
 	// MoveAction が入力されたときに呼ばれる。入力値をもとに XY 平面を移動する
 	void OnMove(const FInputActionValue& Value);

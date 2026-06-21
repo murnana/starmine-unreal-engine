@@ -1,5 +1,7 @@
 #include "PlayerShipPawn.h"
 #include "BulletActor.h"
+#include "CameraRailActor.h"
+#include "Kismet/GameplayStatics.h"
 // USphereComponent の定義。球体の当たり判定コンポーネント
 #include "Components/SphereComponent.h"
 // UDynamicMeshComponent の定義。実行時に頂点・三角形を動的に変更できるメッシュコンポーネント
@@ -19,8 +21,7 @@
 
 APlayerShipPawn::APlayerShipPawn()
 {
-	// Tick（毎フレーム更新）は不要なので無効にする
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	// CreateDefaultSubobject：コンストラクタ専用の Component 生成関数
 	// 生成した Component は自動的に GC 管理下に置かれる
@@ -96,6 +97,27 @@ void APlayerShipPawn::BeginPlay()
 			}
 		}
 	}
+
+	CameraRail = Cast<ACameraRailActor>(
+		UGameplayStatics::GetActorOfClass(GetWorld(), ACameraRailActor::StaticClass())
+	);
+}
+
+void APlayerShipPawn::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (!CameraRail)
+	{
+		return;
+	}
+
+	auto viewBounds2D = CameraRail->GetViewBounds2D();
+	auto playerLocation = this->GetActorLocation();
+	auto min = FVector(viewBounds2D.Min, playerLocation.Z);
+	auto max = FVector(viewBounds2D.Max, playerLocation.Z);
+	auto newLocation = playerLocation.BoundToBox(min, max);
+	this->SetActorLocation(newLocation);
 }
 
 void APlayerShipPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
